@@ -27,7 +27,7 @@ def decrypt_message(private_key, encrypted_message):
 public_key = open_public_key()
 private_key = open_private_key()
 
-message = "f20653ede959a30dd3abe20f53d37cb7767b541b0957de3ae3c7c2daeb513586"
+message = your_origan_key
 encrypted_message = encrypt_message(public_key, message)
 print("Encrypted:", encrypted_message)
 with open(r'C:\Users\f2201\Downloads\encrypted_message.txt', 'wb') as file:
