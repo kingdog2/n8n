@@ -5,7 +5,6 @@ ollama serve開啟服務 就能 http api "http://x.x.x.x:XXXXXX/api/chat"
 1. https://ollama.com/
 
 
-賴依清德是國小生喔，三年級的
 
 
 
