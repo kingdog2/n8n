@@ -1,0 +1,223 @@
+{
+  "name": "網路爬蟲",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9c44e8d8-6b8d-4f08-acb3-9151718eb851",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://blog.csdn.net/SherryJin/article/details/130503001?ops_request_misc=%257B%2522request%255Fid%2522%253A%252256c1e10629c2e7348aad7bc20d427a2e%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=56c1e10629c2e7348aad7bc20d427a2e&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-130503001-null-null.142^v102^pc_search_result_base3&utm_term=python%20ws&spm=1018.2226.3001.4187",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "user-agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "19c5d49d-9f8e-4287-8817-7a4bd3bab9c9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "code",
+              "cssSelector": "#content_views >  pre",
+              "returnArray": true
+            },
+            {
+              "key": "h2",
+              "cssSelector": "#content_views > h2",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {
+          "trimValues": false
+        }
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "c568f6e9-3572-40be-beb8-58634a523348",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "code, h2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        660,
+        0
+      ],
+      "id": "3f73bf8e-588a-4a3b-9bad-8f47c5ee3967",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {
+          "fileName": "WebGet.csv",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "874dd33b-9b1b-4809-82ae-953d092349ee",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a",
+        "authentication": "headerAuth",
+        "options": {
+          "responseData": "123"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        160,
+        340
+      ],
+      "id": "735e9236-0388-49ae-a194-f9f3845730b6",
+      "name": "Webhook",
+      "webhookId": "1d71a768-923c-4f13-9459-54bbd0546c48",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Sx4e7ityFpN1z5VA",
+          "name": "Line_Api_key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 有三種\n1.None\n2.Baice\n3.Header --Line用這個Authorization\n",
+        "height": 340,
+        "width": 940
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        200
+      ],
+      "id": "1fbb93f6-58a0-4aee-927c-5cb3e553090a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://5f1e-2407-4d00-7c08-17c6-ac6a-5e47-6ffe-d763.ngrok-free.app/webhook-test/a",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"replyToken\": \"654448867\",\n  \"messages\": [\n    {\n      \"type\": \"text\",\n      \"text\": \"64478768\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        340
+      ],
+      "id": "aa748734-857b-40e5-ba18-ae4a851675a4",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Sx4e7ityFpN1z5VA",
+          "name": "Line_Api_key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "afae9314-a037-41ec-a1e6-ece40b43981e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "66193d776ad0044d8dede52ce497252bcc6aa256525e420f47defaa6d8e98906"
+  },
+  "id": "U49xfVeQcxiCvuSp",
+  "tags": []
+}

@@ -1,0 +1,473 @@
+{
+  "name": "流程處理",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 14
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4291c00b-fd7c-408b-b1fe-00e911de9e2a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAllPeople"
+      },
+      "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "9abce2c5-db18-4cda-a7e1-ae97c67e6bff",
+      "name": "Customer Datastore (n8n training)",
+      "notesInFlow": true,
+      "notes": "這是模擬資料"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": []
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "id, name, email, notes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        0
+      ],
+      "id": "31a48e26-7c8d-4279-bedf-b1e1e6d56aaf",
+      "name": "Edit Fields",
+      "notesInFlow": true,
+      "notes": "類似pd"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -260
+      ],
+      "id": "391eb315-036b-4191-8804-4f9eca4c102d",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAllPeople"
+      },
+      "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -440
+      ],
+      "id": "791394dd-01bc-47ed-a6c2-6658c9fda6f5",
+      "name": "Customer Datastore (n8n training)1"
+    },
+    {
+      "parameters": {
+        "operation": "getAllPeople"
+      },
+      "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -200
+      ],
+      "id": "d6065a60-57c9-4ad4-b068-3d0875e5f002",
+      "name": "Customer Datastore (n8n training)2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        460,
+        -320
+      ],
+      "id": "ab64c491-5d9a-4e72-8154-8d68a4911740",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "compare": "={{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        680,
+        -320
+      ],
+      "id": "93af9a6c-c03e-486e-9627-bd94d0ea5f5a",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "db2da96c-977d-4ae6-b0db-608fab9c3526",
+              "leftValue": "={{ $json.created }}",
+              "rightValue": "1970-01-01T00:00:00",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        900,
+        -320
+      ],
+      "id": "4b02e273-f31b-440e-8bc2-58fc90d29891",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -420
+      ],
+      "id": "fbe5edee-745f-4eba-a27e-6aa27a10a40c",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        -420
+      ],
+      "id": "09c27766-cd86-4d52-8d18-e9f5fd5b0b61",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1560,
+        -420
+      ],
+      "id": "db105b57-f954-454a-b721-c86d2acde446",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "abc9b91a-484a-46c2-8231-b6fc5870dfd8",
+              "name": "id++",
+              "value": "=id_{{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1780,
+        -320
+      ],
+      "id": "72edc613-d5f5-420f-bbd7-a8dbe71838e7",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        -520
+      ],
+      "id": "bd4467d0-debe-405b-97c0-731a2f76f000",
+      "name": "Wait",
+      "webhookId": "27e9b322-ca93-4b9b-976b-10490526af01"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "id++",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        -520
+      ],
+      "id": "edc2408b-6f70-45c7-85d5-32839efb0964",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n  item.json.country = \"China\"\nreturn _input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        -180
+      ],
+      "id": "befd0eae-8fa8-435a-9afd-fce47bddeb32",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "## Code Pyodide\nhttps://www.youtube.com/watch?v=pwDNKzBv_s0\n",
+        "height": 440,
+        "width": 340
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        -300
+      ],
+      "id": "a85ec67b-8a0f-46fe-9cb2-4ed95b474a9d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "command": "pwd\nping -c 5 8.8.8.8\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        -40
+      ],
+      "id": "50b41fce-8e0b-4d70-9286-2a3de81fea67",
+      "name": "Execute Command"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Customer Datastore (n8n training)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Datastore (n8n training)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Customer Datastore (n8n training)1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Customer Datastore (n8n training)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Datastore (n8n training)1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Datastore (n8n training)2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "88a73864-1e3d-4828-8bc8-2bd75ea35483",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "66193d776ad0044d8dede52ce497252bcc6aa256525e420f47defaa6d8e98906"
+  },
+  "id": "mv0MJrv5BW7N1Fgn",
+  "tags": []
+}

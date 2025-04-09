@@ -1,0 +1,446 @@
+{
+  "name": "數據處理",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 14
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        140
+      ],
+      "id": "a23148b9-bcd9-433b-9a0a-03f728d27fae",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAllPeople"
+      },
+      "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        140
+      ],
+      "id": "8042ffff-e72c-4594-ba28-781417cf353a",
+      "name": "Customer Datastore (n8n training)",
+      "notesInFlow": true,
+      "notes": "這是模擬資料"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f9fb2203-e036-4cbb-8fc3-cb98700a1a21",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "name, email, notes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        200,
+        140
+      ],
+      "id": "2e6177a3-b452-442b-9861-a2c11b17bf61",
+      "name": "Edit Fields",
+      "notesInFlow": true,
+      "notes": "類似pd"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -380
+      ],
+      "id": "7e264c17-ef0d-49d9-99c4-cfbd38626410",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "# 處理資料:\n## -- Aggregate 將資料合併成一個\n## -- Linit設定最多幾筆\n## -- 刪除重複的\n## -- 排序\n## -- 刪掉多餘的columns\n## -- 最重要能做任何事\n",
+        "height": 380,
+        "width": 460
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -280
+      ],
+      "id": "5c785817-7e68-44a7-af24-2bac92b57fcc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -180
+      ],
+      "id": "a30da075-8aed-4d44-b6ff-aa68692056b9",
+      "name": "Limit1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ],
+      "id": "f2bae5d2-a654-418e-9e7e-1bac64c5045e",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "id",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        500,
+        160
+      ],
+      "id": "88922bd5-5c50-419e-83e9-4eb4ecf71e99",
+      "name": "Sort"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "id, notes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        480,
+        320
+      ],
+      "id": "dc28ce58-9f26-4661-8483-86534ba2d343",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        480
+      ],
+      "id": "3c3ecf7c-b6a8-4dd4-bf32-b3eda0ba941b",
+      "name": "Summarize"
+    },
+    {
+      "parameters": {
+        "fileSelector": "C:\\Users\\f2201\\Downloads\\thsrc.xlsx",
+        "options": {
+          "dataPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        780,
+        -260
+      ],
+      "id": "cebe622f-62bc-4909-8b65-b7ab756e1f4e",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        780,
+        -60
+      ],
+      "id": "cd82d2ac-4320-4e0f-b985-d6ce452d4630",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "sheetName": "Sheet"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        800,
+        100
+      ],
+      "id": "337e3bf5-2f5d-4e03-8014-beb4ae04618b",
+      "name": "Extract from File",
+      "notesInFlow": true,
+      "notes": "將資料變成json格式"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        260
+      ],
+      "id": "75257641-66f4-49e8-86aa-4ce37805c4c4",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        -440
+      ],
+      "id": "c941f82d-dde0-410a-93eb-68c6e495776e",
+      "name": "XML"
+    },
+    {
+      "parameters": {
+        "operation": "compress"
+      },
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        1060,
+        -260
+      ],
+      "id": "d5daf7ce-5143-493f-82aa-ffd05ad9a25e",
+      "name": "Compression",
+      "notesInFlow": true,
+      "notes": "解壓縮"
+    },
+    {
+      "parameters": {
+        "operation": "blur",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        -100
+      ],
+      "id": "715bcbbf-a91c-43f7-8c0e-0032f117a052",
+      "name": "Edit Image",
+      "notesInFlow": true,
+      "notes": "處理圖片"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.ftp",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        60
+      ],
+      "id": "94daaef8-c03b-4e3b-a554-3600779b8ebc",
+      "name": "FTP"
+    },
+    {
+      "parameters": {
+        "triggerOn": "file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        220
+      ],
+      "id": "db937ddb-8477-43e1-a5a6-5a8d2a86ca73",
+      "name": "Local File Trigger",
+      "notesInFlow": true,
+      "notes": "監控文件是否變動"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor item in _input.all():\n  item.json.myNewField = 1\nreturn _input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        -420
+      ],
+      "id": "b711bfec-c52f-44c5-8148-611f9e77ef11",
+      "name": "Code",
+      "notesInFlow": true,
+      "notes": "能跑js或是python"
+    },
+    {
+      "parameters": {
+        "content": "# 處理檔案的功能\n",
+        "height": 1000,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        720,
+        -560
+      ],
+      "id": "75beec40-d31b-4b01-b679-06aecafe99e4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Loop over input items and add a new field called 'myNewField' to the JSON of each one\n_input.all()[2].json.email = \"123\" ##只動第3筆資料\nfor item in _input.all():\n  #item.json.email = \"被我code修改\"\n  item.json.myNewField = 1 ##不動\nreturn _input.all()"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        640
+      ],
+      "id": "380fbc7f-fba0-4ca7-b595-c9e90df48fbc",
+      "name": "Code1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Customer Datastore (n8n training)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Datastore (n8n training)": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sort",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        []
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        []
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        []
+      ]
+    },
+    "XML": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "706b954b-ee34-47bd-911c-830437bc0491",
+  "meta": {
+    "instanceId": "66193d776ad0044d8dede52ce497252bcc6aa256525e420f47defaa6d8e98906"
+  },
+  "id": "5XKkvqFh4A8Sy0tJ",
+  "tags": []
+}
