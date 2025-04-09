@@ -36,7 +36,6 @@ if __name__ == "__main__":
         use_private_key = open_private_key()
         os.environ["OPENAI_API_KEY"] = "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"
         os.environ["SERPAPI_API_KEY"] =  decrypt_message(use_private_key, message)
-        #"f20653ede959a30dd3abe20f53d37cb7767b541b0957de3ae3c7c2daeb513586"
         print(os.environ["SERPAPI_API_KEY"])
         
         ##LLM
