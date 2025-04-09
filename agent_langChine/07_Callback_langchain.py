@@ -34,7 +34,7 @@ class TimerHandler(BaseCallbackHandler):
 timerHandler = TimerHandler()
 prompt = PromptTemplate.from_template("What is the HEX code of color {color_name}?")
 
-os.environ["SERPAPI_API_KEY"] =  "f20653ede959a30dd3abe20f53d37cb7767b541b0957de3ae3c7c2daeb513586"
+os.environ["SERPAPI_API_KEY"] =  your_key
 
 ollama_model = OllamaLLM(model= "gemma3:4b", callbacks=[timerHandler])
 print(ollama_model)
