@@ -12,7 +12,7 @@ from langchain.memory import ConversationSummaryMemory, ConversationBufferWindow
 from langchain.chains import LLMChain
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 
-os.environ["SERPAPI_API_KEY"] =  "f20653ede959a30dd3abe20f53d37cb7767b541b0957de3ae3c7c2daeb513586"
+os.environ["SERPAPI_API_KEY"] =  your_key
 
 ollama_model = OllamaLLM(model= "gemma3:4b")#deepseek-r1:latest")#"llama3.2:latest")
 #, temperature=0 隨機設為0
