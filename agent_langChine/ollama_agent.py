@@ -13,8 +13,6 @@ from langchain.memory import ConversationSummaryMemory
 from langchain.agents import get_all_tool_names
 print(get_all_tool_names())
 
-# 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
-
 #private解密
 def open_private_key():
     with open(r'C:\Users\f2201\Downloads\agent_langChine\private_key.pem', 'rb') as private_file:
